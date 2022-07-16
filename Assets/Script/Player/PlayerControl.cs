@@ -44,7 +44,7 @@ public class PlayerControl : MonoBehaviour
     public void PlayerMovement()
     {
         xVelocity = Input.GetAxis("Horizontal");
-        Debug.Log(xVelocity);
+        // Debug.Log(xVelocity);
         FilpDirection();
         // 在某些时候不应该允许移动，比如防御的时候
         if (!anim.GetBool("Block")){
