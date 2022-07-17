@@ -18,6 +18,11 @@ public class PlayerControl : MonoBehaviour
 
     public LayerMask ground;
 
+    [Header("玩家状态")]
+    // 生命值
+    public int health;
+    public UI_PlayerStatus ui_PlayerStatus;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +30,7 @@ public class PlayerControl : MonoBehaviour
         rollSpeed = speed;
         player = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        PlayerHealthChanged();
     }
 
     // Update is called once per frame
@@ -48,7 +54,7 @@ public class PlayerControl : MonoBehaviour
         FilpDirection();
         // 在某些时候不应该允许移动，比如防御的时候
         if (!anim.GetBool("Block")){
-            player.velocity = new Vector2(xVelocity * speed, player.velocity.y);
+            player.velocity = new Vector2(xVelocity * speed*Time.deltaTime*60, player.velocity.y);
             anim.SetFloat("Running", Mathf.Abs(xVelocity));
         }
         
@@ -118,6 +124,7 @@ public class PlayerControl : MonoBehaviour
         }
         
     }
+    // 攻击判定
     void Attack(){
         if (Input.GetKeyDown(KeyCode.X) ){
             if ( !anim.GetBool("Rolling")
@@ -162,5 +169,29 @@ public class PlayerControl : MonoBehaviour
             anim.SetBool("Falling", false);
             anim.SetBool("Idle", true);
         }
+    }
+
+    // 遭受伤害
+    public void Hurted(int demage){
+        anim.SetBool("Hurt",true);
+        health -= demage;
+        // 生命值变化触发函数
+        PlayerHealthChanged();
+        if (health <= 0){
+            anim.SetTrigger("Death");
+        }
+    }
+    // 遭受伤害结束
+    public void EndHurt(){
+        anim.SetBool("Hurt",false);
+    }
+    // 死亡销毁人物
+    public void DeadthDestoryPlayer(){
+        Destroy(gameObject);
+    }
+
+    // 生命值发生变化时触发函数
+    public void PlayerHealthChanged(){
+        ui_PlayerStatus.HeathChanged(health);
     }
 }
