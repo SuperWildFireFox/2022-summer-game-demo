@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+* 该文件处理背景远近移动。
+* 设置 moveRate, 越外层的背景该数值应该越小
+*/
 public class Parallax : MonoBehaviour
 {
     public Transform Cam;
@@ -11,6 +15,8 @@ public class Parallax : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 获取相机对象 transform
+        Cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
         startPointX = transform.position.x;
         startPointY = transform.position.y;
     }
